@@ -1,7 +1,7 @@
 import { Outlet, Scripts, ScrollRestoration } from "react-router";
 
 import type { Route } from "./+types/root";
-import "/../app/assets/style/global.css";
+import "./assets/style/global.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import Header from "./component/layout/Header";
