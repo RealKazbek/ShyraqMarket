@@ -13,7 +13,7 @@ const en = {
       contact: { label: "Contact", href: "#contact" },
     },
     button: {
-      register: { label: "Sign Up" },
+      registration: { label: "Sign Up" },
     },
   },
 

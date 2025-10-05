@@ -13,7 +13,7 @@ const en = {
       contact: { label: "Байланыс", href: "#contact" },
     },
     button: {
-      register: { label: "Тіркелу" },
+      registration: { label: "Тіркелу" },
     },
   },
 

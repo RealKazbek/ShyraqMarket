@@ -19,9 +19,7 @@ function Header() {
 
   type CvButton = { label: string; href: string };
 
-  const downloadcv = (t as any)("header.button.register", {
-    returnObjects: true,
-  }) as CvButton;
+  const registration = (t as any)("header.button.registration") as CvButton;
 
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +47,7 @@ function Header() {
           <div className="flex items-center gap-4">
             <LanguageToggle />
             <ThemeToggle />
-            <Button href="/login">{downloadcv.label}</Button>
+            <Button href="/auth/login">{registration.label}</Button>
           </div>
         </div>
 
@@ -93,7 +91,7 @@ function Header() {
             <div className="flex justify-between items-center gap-4 mt-4">
               <LanguageToggle />
               <ThemeToggle />
-              <Button href="/login">{downloadcv.label}</Button>
+              <Button href="/auth/login">{registration.label}</Button>
             </div>
           </nav>
         </div>

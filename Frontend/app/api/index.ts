@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/";
+const API_URL = "http://127.0.0.1:8000";
 
 export async function apiRequest<T>(
   endpoint: string,
@@ -12,7 +12,8 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
+    const errorText = await response.text();
+    throw new Error(`API error: ${response.status} - ${errorText}`);
   }
 
   return response.json() as Promise<T>;
