@@ -1,12 +1,15 @@
-import { Outlet, Scripts, ScrollRestoration } from "react-router";
-
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { Route } from "./+types/root";
-import "./global.css";
+import "./styles.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import Header from "./component/layout/Header";
 import Footer from "./component/layout/Footer";
 import { ErrorLayout } from "./component/layout/Error";
+
+export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +17,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Links />
+        <Meta />
       </head>
       <body className="bg-gray-50" id="home">
         <ThemeProvider>
