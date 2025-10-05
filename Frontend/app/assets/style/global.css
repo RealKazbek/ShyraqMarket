@@ -154,10 +154,6 @@
   }
 }
 
-section {
-  @apply py-24;
-}
-
 html {
   scroll-behavior: smooth;
 }

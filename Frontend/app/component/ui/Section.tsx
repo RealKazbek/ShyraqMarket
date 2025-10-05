@@ -18,7 +18,7 @@ function Section({
 
   return (
     <section className={cn("w-full", variantClasses[variant])} {...props}>
-      <div className={cn("container", className)}>{children}</div>
+      <div className={cn("container py-24", className)}>{children}</div>
     </section>
   );
 }

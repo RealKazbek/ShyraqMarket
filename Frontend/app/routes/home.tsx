@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+import Section from "~/component/ui/Section";
 import type { Route } from "./+types/home";
+import Products from "~/component/layout/Products";
+import { getProducts } from "~/api/product";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,7 +12,34 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (err: any) {
+        setError("Ошибка при загрузке товаров");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex justify-center items-center h-160">HOME PAGE</div>
+    <Section className="py-12">
+      <h2 className="text-xl font-bold mb-6">
+        Обувь для мужчин оптом и в розницу из Китая
+      </h2>
+
+      {loading && <p>Загрузка...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && <Products products={products} />}
+    </Section>
   );
 }
