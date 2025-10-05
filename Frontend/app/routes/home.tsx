@@ -8,5 +8,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <></>;
+  return (
+    <div className="flex justify-center items-center h-160">HOME PAGE</div>
+  );
 }
