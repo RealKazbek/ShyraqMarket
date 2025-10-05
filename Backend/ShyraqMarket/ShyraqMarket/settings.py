@@ -1,18 +1,13 @@
 from pathlib import Path
 from datetime import timedelta
-import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-z7umavd6jok97^8y-)9zg)#!f6$ix(jho(@=pg%_+_v@19#uzg"
-)
+SECRET_KEY = "django-insecure-z7umavd6jok97^8y-)9zg)#!f6$ix(jho(@=pg%_+_v@19#uzg"
 
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = True
 
-# ALLOWED_HOSTS
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ["*", "localhost", "127.0.0.1", "shyraqmarket.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -34,7 +29,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
 
     "drf_yasg",
-
     "corsheaders",
 
     "products",
@@ -74,19 +68,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ShyraqMarket.wsgi.application"
 
-# DATABASES
-if os.getenv("DATABASE_URL"):
-    DATABASES = {
-        "default": dj_database_url.config(default=os.getenv("DATABASE_URL"), conn_max_age=600)
+# Database (только SQLite)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -94,17 +84,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# Language & Time
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# Static
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Allauth
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -115,14 +108,16 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+# Email (чисто хардкодом)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "g7kazbek@gmail.com")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "bszvjolsnabpwbyo")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "g7kazbek@gmail.com")
+EMAIL_HOST_USER = "g7kazbek@gmail.com"
+EMAIL_HOST_PASSWORD = "bszvjolsnabpwbyo"
+DEFAULT_FROM_EMAIL = "g7kazbek@gmail.com"
 
+# DRF
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -133,6 +128,7 @@ REST_FRAMEWORK = {
     ],
 }
 
+# dj-rest-auth
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
@@ -140,15 +136,18 @@ REST_AUTH = {
     "JWT_AUTH_REFRESH_COOKIE": "core-refresh-token",
 }
 
+# JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
 }
 
+# Swagger
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
     }
 }
 
+# CORS
 CORS_ALLOW_ALL_ORIGINS = True
