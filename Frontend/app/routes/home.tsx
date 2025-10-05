@@ -3,6 +3,7 @@ import Section from "~/component/ui/Section";
 import type { Route } from "./+types/home";
 import Products from "~/component/layout/Products";
 import { getProducts } from "~/api/product";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,6 +16,15 @@ export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (!token) {
+      navigate("/auth/login", { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     async function fetchData() {
