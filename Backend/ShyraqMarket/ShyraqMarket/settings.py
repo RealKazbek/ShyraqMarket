@@ -30,11 +30,16 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
 
     "drf_yasg",
+
+    "corsheaders",
+
+    "products",
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -158,3 +163,6 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+
+CORS_ALLOW_ALL_ORIGINS = True
