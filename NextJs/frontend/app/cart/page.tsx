@@ -20,12 +20,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { loadFromStorage, saveToStorage } from "@/lib/storage";
+import Image from "next/image";
 
 type CartItem = {
   id: number;
   title: string;
   price: number;
   qty: number;
+  image: string; // добавил
 };
 
 type Order = {
@@ -131,11 +133,19 @@ export default function CartPage() {
                 <TableRow key={item.id}>
                   <TableCell>
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                        IMG
+                      <div className="w-16 h-16 bg-gray-200 rounded overflow-hidden flex items-center justify-center">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          width={64}
+                          height={64}
+                          unoptimized
+                        />
                       </div>
                       <div>
-                        <p className="font-medium">{item.title}</p>
+                        <p className="font-medium text-wrap max-w-125">
+                          {item.title}
+                        </p>
                         <button
                           onClick={() => removeItem(item.id)}
                           className="text-sm text-red-500"
@@ -145,6 +155,7 @@ export default function CartPage() {
                       </div>
                     </div>
                   </TableCell>
+
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Button size="sm" onClick={() => updateQty(item.id, -1)}>

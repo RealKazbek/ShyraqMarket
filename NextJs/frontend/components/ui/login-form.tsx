@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,12 +17,41 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { login } from "@/api/auth";
 
 type loginProps = React.ComponentProps<"div"> & {
   onClose: () => void;
 };
 
 export function LoginForm({ className, onClose, ...props }: loginProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await login(email, password);
+      console.log("Login success:", res);
+
+      // сохраняем токены в localStorage
+      localStorage.setItem("access", res.access);
+      localStorage.setItem("refresh", res.refresh);
+
+      // закрываем модалку после успешного логина
+      onClose();
+    } catch (err: unknown) {
+      console.error("Login error:", err);
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -35,7 +67,7 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
           </span>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -43,6 +75,8 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
@@ -56,10 +90,21 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </Field>
+              {error && (
+                <p className="text-sm text-red-500">{error}</p>
+              )}
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Logging in..." : "Login"}
+                </Button>
                 <Button variant="outline" type="button">
                   Login with Google
                 </Button>

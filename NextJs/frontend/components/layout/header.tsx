@@ -34,14 +34,11 @@ function Header() {
 
           {isCatalogOpen && (
             <div className="absolute left-0 mt-2 w-64 bg-white border shadow-lg z-50">
-              <span className="px-4 py-2 rounded-xl font-bold text-red-500">
-                Извините пока не работает
-              </span>
-              {/* <ul className="flex flex-col">
+              <ul className="flex flex-col">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  Мобильные телефоны
+                  <Link href="/">Топ товары</Link>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   Компьютеры
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
@@ -58,8 +55,8 @@ function Header() {
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   Спорт и развлечения
-                </li>
-              </ul> */}
+                </li> */}
+              </ul>
             </div>
           )}
         </div>
