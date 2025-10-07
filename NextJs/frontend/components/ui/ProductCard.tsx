@@ -48,7 +48,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <CardContent className="flex flex-col gap-3 flex-1">
         <div className="flex items-center gap-2">
-          <span className="text-emerald-600 font-bold">{product.price}</span>
+          <span className="text-emerald-600 font-bold">{parseFloat(product.price.replace(/[^\d.-]/g, ""))} ₸</span>
         </div>
 
         <Button onClick={handleAddToCart} className="w-full mt-2">
