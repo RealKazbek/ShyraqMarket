@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { loadFromStorage, saveToStorage } from "@/lib/storage"
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { loadFromStorage, saveToStorage } from "@/lib/storage";
 
 type CartItem = {
-  id: number
-  title: string
-  price: number
-  qty: number
-}
+  id: number;
+  title: string;
+  price: number;
+  qty: number;
+};
 
 type Order = {
-  id: string
-  items: CartItem[]
-  total: number
-  shipping: string
-  promo: boolean
-  status: "processing" | "confirmed" | "shipped" | "delivered"
-  createdAt: string
-  deliveryOption?: "home" | "branch"
-}
+  id: string;
+  items: CartItem[];
+  total: number;
+  shipping: string;
+  promo: boolean;
+  status: "processing" | "confirmed" | "shipped" | "delivered";
+  createdAt: string;
+  deliveryOption?: "home" | "branch";
+};
 
 const steps = [
   "Заказ оформлен",
@@ -29,65 +29,67 @@ const steps = [
   "Прибыл в Казахстан",
   "Доставка курьером",
   "Доставлен",
-]
+];
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    const stored = loadFromStorage<Order[]>("orders", [])
-    setOrders(stored)
-  }, [])
+    const stored = loadFromStorage<Order[]>("orders", []);
+    setOrders(stored);
+  }, []);
 
-  // имитация изменения статуса каждые 60 сек
   useEffect(() => {
-    if (orders.length === 0) return
+    if (orders.length === 0) return;
 
     const timer = setInterval(() => {
       setOrders((prev) => {
-        const updated = prev.map((o) => {
-          if (o.status === "processing") return { ...o, status: "confirmed" }
-          if (o.status === "confirmed") return { ...o, status: "shipped" }
-          if (o.status === "shipped") return { ...o, status: "delivered" }
-          return o
-        })
-        saveToStorage("orders", updated)
-        return updated
-      })
-    }, 3000)
+        const updated: Order[] = prev.map((o) => {
+          if (o.status === "processing")
+            return { ...o, status: "confirmed" as Order["status"] };
+          if (o.status === "confirmed")
+            return { ...o, status: "shipped" as Order["status"] };
+          if (o.status === "shipped")
+            return { ...o, status: "delivered" as Order["status"] };
+          return o;
+        });
+        saveToStorage("orders", updated);
+        return updated;
+      });
+    }, 3000);
 
-    return () => clearInterval(timer)
-  }, [orders])
+    return () => clearInterval(timer);
+  }, [orders]);
 
   const getStepIndex = (status: Order["status"]) => {
     switch (status) {
       case "processing":
-        return 0
+        return 0;
       case "confirmed":
-        return 1
+        return 1;
       case "shipped":
-        return 2
+        return 2;
       case "delivered":
-        return 4
+        return 4;
       default:
-        return 0
+        return 0;
     }
-  }
+  };
 
   const chooseDeliveryOption = (orderId: string, option: "home" | "branch") => {
     setOrders((prev) => {
       const updated = prev.map((o) =>
         o.id === orderId ? { ...o, deliveryOption: option } : o
-      )
-      saveToStorage("orders", updated)
-      return updated
-    })
+      );
+      saveToStorage("orders", updated);
+      return updated;
+    });
     alert(
       option === "home"
         ? "🚚 Курьер привезёт заказ к вам домой"
         : "📦 Заберите заказ в ближайшем филиале"
-    )
-  }
+    );
+  };
 
   return (
     <div className="px-6 py-10 space-y-8">
@@ -96,7 +98,7 @@ export default function OrdersPage() {
       {orders.length === 0 && <p className="text-gray-500">Заказов нет</p>}
 
       {orders.map((order) => {
-        const stepIndex = getStepIndex(order.status)
+        const stepIndex = getStepIndex(order.status);
 
         return (
           <Card key={order.id}>
@@ -104,7 +106,8 @@ export default function OrdersPage() {
               <div>
                 <CardTitle>Заказ #{order.id}</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Доставка: {order.shipping === "standard" ? "Стандарт" : "Экспресс"}
+                  Доставка:{" "}
+                  {order.shipping === "standard" ? "Стандарт" : "Экспресс"}
                   {order.promo && " + Промо HALYK OIY"}
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -112,7 +115,9 @@ export default function OrdersPage() {
                 </p>
               </div>
               <div className="flex flex-col items-end">
-                <span className="font-bold">Итого: {order.total.toFixed(2)} ₸</span>
+                <span className="font-bold">
+                  Итого: {order.total.toFixed(2)} ₸
+                </span>
                 <span className="text-sm text-muted-foreground">
                   Статус: {steps[stepIndex]}
                 </span>
@@ -189,8 +194,8 @@ export default function OrdersPage() {
               )}
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
