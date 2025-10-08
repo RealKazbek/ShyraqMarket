@@ -6,6 +6,7 @@ import { LanguageProvider } from "./context/LanguageContext";
 import Header from "./component/layout/Header";
 import Footer from "./component/layout/Footer";
 import { ErrorLayout } from "./component/layout/Error";
+import RoulettePage from "./component/layout/Roulette";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
@@ -23,13 +24,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="bg-gray-50" id="home">
         <ThemeProvider>
           <LanguageProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-1 flex flex-col mt-18 xl:mt-20">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <RoulettePage />
           </LanguageProvider>
         </ThemeProvider>
 
