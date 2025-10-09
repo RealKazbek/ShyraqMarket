@@ -16,11 +16,15 @@ import account from "@/public/account.svg";
 import cart from "@/public/cart.svg";
 import basket from "@/public/basket.svg";
 import catalog from "@/public/catalog.svg";
+import delivery from "@/public/delivery.svg";
+import admin from "@/public/adminSite.svg";
 import { useRouter } from "next/navigation";
+import { getMe } from "@/api/auth";
 
 type User = {
   id: number;
   username?: string;
+  role: "ADMIN" | "USER" | "COURIER";
   avatar?: string | null;
 };
 
@@ -53,6 +57,34 @@ function Header() {
       window.removeEventListener("userLoggedOut", handleLogout);
     };
   }, []);
+
+  async function handleAdmin() {
+    try {
+      const me = await getMe(localStorage.getItem("access") || "");
+      if (me.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        alert("Бан захотелось?");
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке роли:", error);
+      alert("Не удалось получить данные пользователя");
+    }
+  }
+
+  async function handleCourier() {
+    try {
+      const me = await getMe(localStorage.getItem("access") || "");
+      if (me.role === "ADMIN" || me.role === "COURIER") {
+        router.push("/courier");
+      } else {
+        alert("Бан захотелось?");
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке роли:", error);
+      alert("Не удалось получить данные пользователя");
+    }
+  }
 
   function handleOrdersClick() {
     if (user) {
@@ -107,6 +139,20 @@ function Header() {
 
       {/* Правый блок */}
       <div className="flex items-center gap-4 flex-shrink-0">
+        {user?.role === "ADMIN" && (
+          <Button onClick={handleAdmin}>
+            <Image width={16} height={16} src={admin} alt="" />
+            Admin
+          </Button>
+        )}
+
+        {["COURIER", "ADMIN"].includes(user?.role || "USER") && (
+          <Button onClick={handleCourier}>
+            <Image width={16} height={16} src={delivery} alt="" />
+            Courier
+          </Button>
+        )}
+
         <Button onClick={handleOrdersClick}>
           <Image width={16} height={16} src={basket} alt="" />
           Заказы

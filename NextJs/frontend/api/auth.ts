@@ -35,3 +35,12 @@ export async function sendCode(phone: string) {
     body: JSON.stringify({ phone }),
   });
 }
+
+export async function getMe(token: string) {
+  return apiRequest<User>("/auth/me/", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

@@ -8,6 +8,8 @@ from django.core.cache import cache
 from django.conf import settings
 from twilio.rest import Client
 from .serializers import SendCodeSerializer
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserMeSerializer
 
 # class SendCodeView(APIView):
 #     @swagger_auto_schema(request_body=SendCodeSerializer)
@@ -56,3 +58,10 @@ class LoginView(APIView):
             data = serializer.save()
             return Response(data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserMeSerializer(request.user)
+        return Response(serializer.data)
