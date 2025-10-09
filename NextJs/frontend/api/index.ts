@@ -1,4 +1,4 @@
-const API_URL = "https://shyraqmarket.onrender.com";
+const API_URL = "https://.onrender.com";
 
 export async function apiRequest<T>(
   endpoint: string,

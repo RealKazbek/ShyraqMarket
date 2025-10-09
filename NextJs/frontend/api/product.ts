@@ -1,8 +1,8 @@
 import { apiRequest } from "./index";
 
 export type Product = {
-  id: number;
-  product_id: string;
+  id: number;          // это pk в БД (int)
+  product_id: string;  // это UUID
   title: string;
   price: string;
   link: string;

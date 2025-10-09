@@ -10,24 +10,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { login } from "@/api/auth";
+import { login, sendCode, register } from "@/api/auth";
+import Image from "next/image";
+import cross from "@/public/cross.svg";
 
 type loginProps = React.ComponentProps<"div"> & {
   onClose: () => void;
 };
 
 export function LoginForm({ className, onClose, ...props }: loginProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+  const [username, setUsername] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function handleSendCode() {
+    try {
+      setError(null);
+      setMessage(null);
+      const res = await sendCode(phone);
+      setMessage(res.message || "Code sent (check WhatsApp)");
+    } catch (err) {
+      console.log(err);
+      setError("Failed to send code");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,18 +48,28 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
     setError(null);
 
     try {
-      const res = await login(email, password);
-      console.log("Login success:", res);
+      let res;
+      if (isRegister) {
+        res = await register(username, phone, code);
+      } else {
+        res = await login(phone, code);
+      }
 
-      // сохраняем токены в localStorage
+      console.log(`${isRegister ? "Register" : "Login"} success:`, res);
+
       localStorage.setItem("access", res.access);
       localStorage.setItem("refresh", res.refresh);
 
-      // закрываем модалку после успешного логина
+      if (res.user) {
+        localStorage.setItem("user", JSON.stringify(res.user));
+      }
+
+      window.dispatchEvent(new Event("userLoggedIn"));
+
       onClose();
-    } catch (err: unknown) {
-      console.error("Login error:", err);
-      setError("Invalid email or password");
+    } catch (err) {
+      console.log(err);
+      setError("Invalid phone/code or registration error");
     } finally {
       setLoading(false);
     }
@@ -57,60 +80,86 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
       <Card>
         <CardHeader className="flex justify-between">
           <div>
-            <CardTitle>Login to your account</CardTitle>
+            <CardTitle>
+              {isRegister ? "Sign up" : "Login"} to your account
+            </CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              {isRegister
+                ? "Create a new account using your phone and code"
+                : "Enter your phone and code to login"}
             </CardDescription>
           </div>
-          <span className="text-xl font-bold cursor-pointer" onClick={onClose}>
-            X
-          </span>
+          <Image
+            className="hover:scale-90 hover:rotate-180 transition-transform duration-300"
+            src={cross}
+            alt="X"
+            onClick={onClose}
+          />
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </Field>
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
+              {isRegister && (
+                <Field>
+                  <FieldLabel htmlFor="username">Name</FieldLabel>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Your name"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required={isRegister}
+                  />
+                </Field>
               )}
               <Field>
+                <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="+77070000000"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="code">Code</FieldLabel>
+                <div className="flex gap-2">
+                  <Input
+                    id="code"
+                    type="text"
+                    placeholder="1111"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    required
+                  />
+                  <Button type="button" onClick={handleSendCode}>
+                    Get code
+                  </Button>
+                </div>
+              </Field>
+              {error && <p className="text-sm text-red-500">{error}</p>}
+              {message && <p className="text-sm text-green-600">{message}</p>}
+              <Field className="flex flex-col gap-2">
                 <Button type="submit" disabled={loading}>
-                  {loading ? "Logging in..." : "Login"}
+                  {loading
+                    ? isRegister
+                      ? "Registering..."
+                      : "Logging in..."
+                    : isRegister
+                    ? "Sign up"
+                    : "Login"}
                 </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsRegister(!isRegister)}
+                >
+                  {isRegister
+                    ? "Already have an account? Login"
+                    : "Don’t have an account? Sign up"}
                 </Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>

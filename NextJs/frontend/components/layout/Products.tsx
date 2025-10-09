@@ -13,6 +13,7 @@ export default function Products() {
     async function fetchData() {
       try {
         const data = await getProducts();
+        console.log(data);
         setProducts(data);
       } catch (err: unknown) {
         if (err instanceof Error) setError(err.message);

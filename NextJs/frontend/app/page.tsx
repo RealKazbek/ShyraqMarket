@@ -1,4 +1,4 @@
-import Products from "@/components/layout/Products"
+import Products from "@/components/layout/products"
 
 export default function HomePage() {
   return (

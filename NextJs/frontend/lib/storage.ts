@@ -41,3 +41,14 @@ export function removeFromList<T>(
   const updated = current.filter((i) => !predicate(i));
   saveToStorage(key, updated);
 }
+
+export function loadToken(key: string, fallback = ""): string {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const item = localStorage.getItem(key);
+    return item ?? fallback;
+  } catch (e) {
+    console.error("Storage load error:", e);
+    return fallback;
+  }
+}
