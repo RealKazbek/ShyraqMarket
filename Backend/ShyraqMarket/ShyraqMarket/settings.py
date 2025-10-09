@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     "corsheaders",
 
     "products",
+
+    "django_celery_beat",
 ]
 
 SITE_ID = 1
@@ -151,3 +153,10 @@ SWAGGER_SETTINGS = {
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': None,
+}

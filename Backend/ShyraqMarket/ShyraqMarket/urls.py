@@ -8,6 +8,7 @@ from drf_yasg import openapi
 
 from rest_framework.routers import DefaultRouter
 from products.views import ProductViewSet
+from rest_framework.permissions import AllowAny
 
 router = DefaultRouter()
 router.register(r"products", ProductViewSet)
@@ -19,7 +20,8 @@ schema_view = get_schema_view(
         description="Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(AllowAny,), 
+
 )
 
 urlpatterns = [
