@@ -51,9 +51,11 @@ function MenuContentComponent({
           <span>Мои заказы</span>
         </Button>
 
-        <Button onClick={() => onRoute("/cart")} className="justify-start">
-          <Image src={cartIcon} alt="cart" width={16} height={16} />
-          <span>Корзина</span>
+        <Button className="justify-start">
+          <Link className="flex gap-2" href={"/cart"}>
+            <Image src={cartIcon} alt="cart" width={16} height={16} />
+            <span>Корзина</span>
+          </Link>
         </Button>
 
         {user?.role === "ADMIN" && (
