@@ -1,33 +1,56 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect, memo } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import catalogIcon from "@/public/icons/system/catalog.svg";
+import { CatalogContent } from "@/components/ui/CatalogContent";
 
-export default function CatalogMenu() {
-  const [open, setOpen] = useState(false);
+function CatalogMenuBase() {
+  const router = useRouter();
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Проверяем, что компонент отрендерился на клиенте
+  useEffect(() => setMounted(true), []);
+
+  // Блокируем скролл при открытом каталоге
+  useEffect(() => {
+    document.body.style.overflow = isCatalogOpen ? "hidden" : "auto";
+  }, [isCatalogOpen]);
+
+  const handleSelect = (path: string) => {
+    setIsCatalogOpen(false);
+    router.push(path);
+  };
 
   return (
-    <div className="relative">
-      <Button onClick={() => setOpen(!open)}>
-        <Image src={catalogIcon} alt="catalog" width={16} height={16} />
+    <>
+      {/* Кнопка открытия каталога */}
+      <Button
+        onClick={() => setIsCatalogOpen(true)}
+        className="flex items-center gap-2"
+        size={"lg"}
+      >
+        <Image src={catalogIcon} alt="catalog" width={24} height={24} />
         Каталог
       </Button>
-      {open && (
-        <div className="absolute left-0 mt-2 w-56 bg-white border rounded-xl shadow-md">
-          <ul className="flex flex-col">
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              Топ товары
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              Электроника
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              Одежда
-            </li>
-          </ul>
-        </div>
-      )}
-    </div>
+
+      {/* Портал каталога */}
+      {mounted &&
+        isCatalogOpen &&
+        createPortal(
+          <CatalogContent
+            onClose={() => setIsCatalogOpen(false)}
+            onSelect={handleSelect}
+          />,
+          document.body
+        )}
+    </>
   );
 }
+
+export const CatalogMenu = memo(CatalogMenuBase, () => true);
+export default CatalogMenu;

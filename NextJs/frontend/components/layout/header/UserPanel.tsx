@@ -73,6 +73,7 @@ function UserPanelBase() {
           <Button
             onClick={() => handleProtectedRoute("/admin")}
             className="flex items-center gap-2"
+            size={"lg"}
           >
             <Image src={adminIcon} alt="admin" width={16} height={16} />
             <span>Admin</span>
@@ -83,19 +84,20 @@ function UserPanelBase() {
           <Button
             onClick={() => handleProtectedRoute("/courier")}
             className="flex items-center gap-2"
+            size={"lg"}
           >
-            <Image src={deliveryIcon} alt="courier" width={16} height={16} />
+            <Image src={deliveryIcon} alt="courier" width={24} height={24} />
             <span>Courier</span>
           </Button>
         )}
 
-        <Button onClick={() => handleProtectedRoute("/order")}>
-          <Image src={basketIcon} alt="orders" width={16} height={16} />
+        <Button onClick={() => handleProtectedRoute("/order")} size={"lg"}>
+          <Image src={basketIcon} alt="orders" width={24} height={24} />
           Мой заказы
         </Button>
 
-        <Button onClick={() => handleProtectedRoute("/cart")}>
-          <Image src={cartIcon} alt="cart" width={16} height={16} />
+        <Button onClick={() => handleProtectedRoute("/cart")} size={"lg"}>
+          <Image src={cartIcon} alt="cart" width={24} height={24} />
           Корзина
         </Button>
 
@@ -110,8 +112,8 @@ function UserPanelBase() {
             />
           </Link>
         ) : (
-          <Button onClick={() => setIsAuthOpen(true)}>
-            <Image src={loginIcon} alt="cart" width={16} height={16} />
+          <Button onClick={() => setIsAuthOpen(true)} size={"lg"}>
+            <Image src={loginIcon} alt="cart" width={24} height={24} />
             Войти
           </Button>
         )}

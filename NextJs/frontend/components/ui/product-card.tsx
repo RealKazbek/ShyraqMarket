@@ -44,13 +44,13 @@ export default function ProductCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
-        "group w-full flex flex-col border border-gray-200 overflow-hidden rounded-2xl relative transition-all duration-500 hover:shadow-lg hover:scale-[1.01] cursor-pointer"
+        "group w-full flex flex-col border border-gray-200 overflow-hidden rounded-xl md:rounded-2xl relative transition-all duration-500 hover:shadow-lg hover:scale-[1.01] cursor-pointer"
       )}
     >
       {/* Верхняя часть */}
       <div
         className={clsx(
-          "relative flex-1 transition-all duration-700 ease-in-out flex items-center justify-center min-h-[180px] sm:min-h-[220px] md:min-h-[260px]",
+          "relative flex-1 transition-all duration-700 ease-in-out flex items-center justify-center min-h-[170px] sm:min-h-[220px] md:min-h-[260px]",
           backgrounds[bgIndex]
         )}
       >
@@ -66,7 +66,7 @@ export default function ProductCard({
         </button>
 
         {/* Теги */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <div className="absolute bottom-2 left-2 flex flex-col gap-1">
           {discount && (
             <span className="bg-rose-500 text-white text-xs font-semibold px-2 py-0.5 rounded-xl">
               -{discount}%
@@ -84,7 +84,7 @@ export default function ProductCard({
       </div>
 
       {/* Контент */}
-      <CardContent className="flex flex-col justify-between p-3 sm:p-4 bg-white">
+      <CardContent className="flex flex-col justify-between px-1.5 md:p-3 sm:p-4 bg-white">
         <div className="space-y-1">
           <p className="text-sm sm:text-base font-medium text-gray-900 line-clamp-2 min-h-[38px]">
             {title}
@@ -97,7 +97,7 @@ export default function ProductCard({
         <Button
           variant="default"
           size="sm"
-          className="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium flex items-center justify-center gap-1"
+          className="sm:mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium flex items-center justify-center gap-1"
         >
           <ShoppingCart size={16} /> В корзину
         </Button>

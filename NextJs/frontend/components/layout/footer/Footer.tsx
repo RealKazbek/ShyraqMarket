@@ -14,7 +14,7 @@ export default function Footer() {
     >
       <nav
         aria-label="Footer navigation"
-        className="max-w-6xl mx-auto px-3 py-10 grid text-center sm:text-left grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
+        className="max-w-6xl mx-auto px-3 md:px-6 sm:px-9 lg:px-12 py-10 grid text-center sm:text-left grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
       >
         <div>
           <h4 className="font-semibold mb-3 text-emerald-700">Покупателям</h4>
