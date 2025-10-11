@@ -57,7 +57,7 @@ export default function RootLayout({
       >
         <HeaderServer />
 
-        <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-3">
+        <main className="flex-1 w-full max-w-8xl mx-auto px-8 py-3">
           {children}
         </main>
 

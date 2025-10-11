@@ -1,7 +1,11 @@
+import ProductsSection from "@/components/section/products-section";
+import PromoBanner from "@/components/ui/promo-banner";
+
 export default function HomePage() {
   return (
     <>
-      Main
+      <PromoBanner />
+      <ProductsSection />
     </>
   );
 }

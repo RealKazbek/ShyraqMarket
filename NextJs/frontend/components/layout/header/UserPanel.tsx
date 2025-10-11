@@ -16,6 +16,7 @@ import accountIcon from "@/public/icons/roles/account.svg";
 import menuIcon from "@/public/icons/system/menu.svg";
 import adminIcon from "@/public/icons/roles/adminSite.svg";
 import deliveryIcon from "@/public/icons/roles/delivery.svg";
+import loginIcon from "@/public/icons/roles/account.svg";
 
 const LoginModal = dynamic(() => import("@/components/layout/auth/Auth"), {
   ssr: false,
@@ -90,10 +91,12 @@ function UserPanelBase() {
 
         <Button onClick={() => handleProtectedRoute("/order")}>
           <Image src={basketIcon} alt="orders" width={16} height={16} />
+          Мой заказы
         </Button>
 
         <Button onClick={() => handleProtectedRoute("/cart")}>
           <Image src={cartIcon} alt="cart" width={16} height={16} />
+          Корзина
         </Button>
 
         {user ? (
@@ -107,7 +110,8 @@ function UserPanelBase() {
             />
           </Link>
         ) : (
-          <Button size="sm" onClick={() => setIsAuthOpen(true)}>
+          <Button onClick={() => setIsAuthOpen(true)}>
+            <Image src={loginIcon} alt="cart" width={16} height={16} />
             Войти
           </Button>
         )}
