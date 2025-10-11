@@ -3,8 +3,14 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Check } from "lucide-react";
 import clsx from "clsx";
+import {
+  addToCart,
+  toggleFavorite,
+  getCart,
+  getFavorites,
+} from "@/lib/storage";
 
 interface ProductCardProps {
   title: string;
@@ -21,6 +27,8 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [hovered, setHovered] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
+  const [inCart, setInCart] = useState(false);
+  const [inFavorite, setInFavorite] = useState(false);
 
   const backgrounds = [
     "bg-gradient-to-br from-emerald-200 to-lime-200",
@@ -28,6 +36,37 @@ export default function ProductCard({
     "bg-gradient-to-br from-rose-200 to-orange-200",
   ];
 
+  // 🧠 Проверяем localStorage при загрузке
+  useEffect(() => {
+    const cart = getCart();
+    const favorites = getFavorites();
+
+    setInCart(cart.some((item) => item.title === title));
+    setInFavorite(favorites.some((item) => item.title === title));
+  }, [title]);
+
+  // 🛒 Добавление / удаление из корзины
+  const handleAddToCart = () => {
+    const cart = getCart();
+    const exists = cart.some((item) => item.title === title);
+
+    if (exists) {
+      const updated = cart.filter((item) => item.title !== title);
+      localStorage.setItem("cart", JSON.stringify(updated));
+      setInCart(false);
+    } else {
+      addToCart({ title, price, quantity: 1 });
+      setInCart(true);
+    }
+  };
+
+  // ❤️ Добавление / удаление из избранного
+  const handleFavorite = () => {
+    const added = toggleFavorite({ title, price });
+    setInFavorite(added);
+  };
+
+  // 🌈 Анимация фона
   useEffect(() => {
     if (!hovered) return;
     const interval = setInterval(() => {
@@ -36,8 +75,6 @@ export default function ProductCard({
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hovered]);
-
-  const handleFavorite = () => alert("Добавлено в избранное ❤️");
 
   return (
     <Card
@@ -61,7 +98,10 @@ export default function ProductCard({
         >
           <Heart
             size={18}
-            className="cursor-pointer text-rose-600 transition-transform duration-300 hover:animate-pulse hover:scale-130"
+            className={clsx(
+              "cursor-pointer transition-transform duration-300 hover:animate-pulse hover:scale-125",
+              inFavorite ? "text-rose-600 fill-rose-600" : "text-rose-600"
+            )}
           />
         </button>
 
@@ -95,11 +135,25 @@ export default function ProductCard({
         </div>
 
         <Button
+          onClick={handleAddToCart}
           variant="default"
           size="sm"
-          className="sm:mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium flex items-center justify-center gap-1"
+          className={clsx(
+            "sm:mt-3 w-full font-medium flex items-center justify-center gap-1 transition-all",
+            inCart
+              ? "bg-gray-300 hover:bg-gray-400 text-gray-700"
+              : "bg-emerald-600 hover:bg-emerald-700 text-white"
+          )}
         >
-          <ShoppingCart size={16} /> В корзину
+          {inCart ? (
+            <>
+              <Check size={16} /> В корзине
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={16} /> В корзину
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>

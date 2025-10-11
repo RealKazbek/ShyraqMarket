@@ -35,33 +35,24 @@ function CatalogContentComponent({ onClose, onSelect }: CatalogContentProps) {
 
         {/* Категории каталога */}
         <Button
-          onClick={() => onSelect("/catalog/top")}
+          onClick={() => onSelect("the best of the month")}
           className="justify-start"
         >
-          🔥 Топ товары
+          🔥 Лучшее за месяц
         </Button>
         <Button
-          onClick={() => onSelect("/catalog/electronics")}
+          onClick={() => onSelect("electronics")}
           className="justify-start"
         >
           💻 Электроника
         </Button>
-        <Button
-          onClick={() => onSelect("/catalog/clothes")}
-          className="justify-start"
-        >
+        <Button onClick={() => onSelect("clothes")} className="justify-start">
           👕 Одежда
         </Button>
-        <Button
-          onClick={() => onSelect("/catalog/home")}
-          className="justify-start"
-        >
+        <Button onClick={() => onSelect("home")} className="justify-start">
           🏠 Для дома
         </Button>
-        <Button
-          onClick={() => onSelect("/catalog/beauty")}
-          className="justify-start"
-        >
+        <Button onClick={() => onSelect("beauty")} className="justify-start">
           💄 Красота
         </Button>
       </div>

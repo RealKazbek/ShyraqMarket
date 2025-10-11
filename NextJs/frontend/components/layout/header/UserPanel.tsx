@@ -96,7 +96,7 @@ function UserPanelBase() {
           Мой заказы
         </Button>
 
-        <Button onClick={() => handleProtectedRoute("/cart")} size={"lg"}>
+        <Button onClick={() => router.push("/cart")} size={"lg"}>
           <Image src={cartIcon} alt="cart" width={24} height={24} />
           Корзина
         </Button>

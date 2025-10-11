@@ -23,7 +23,7 @@ function CatalogMenuBase() {
 
   const handleSelect = (path: string) => {
     setIsCatalogOpen(false);
-    router.push(path);
+    router.push(`/catalog/${encodeURIComponent(path)}`);
   };
 
   return (
