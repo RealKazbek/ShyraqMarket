@@ -22,7 +22,7 @@ export default function Search() {
   };
 
   return (
-    <div className="flex mb-5 md:hidden items-center justify-between border rounded-lg overflow-hidden w-full">
+    <div className="flex md:hidden items-center justify-between border rounded-lg overflow-hidden w-full mb-3">
       <input
         type="text"
         placeholder="Поиск..."

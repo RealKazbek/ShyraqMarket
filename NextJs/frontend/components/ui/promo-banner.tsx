@@ -47,7 +47,7 @@ export default function PromoBanner() {
       className="
         relative w-full 
         h-[180px] xs:h-[220px] sm:h-[300px] md:h-[360px] lg:h-[420px] 
-        overflow-hidden rounded-2xl shadow-md
+        overflow-hidden rounded-2xl shadow-md mt-3
       "
     >
       {/* Слайды */}

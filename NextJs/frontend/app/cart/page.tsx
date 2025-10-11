@@ -8,7 +8,7 @@ import ProductsSection from "@/components/section/products-section";
 export default function CartPage() {
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-8 py-8">
+      <div className="flex flex-col lg:flex-row gap-8 mb-12">
         <section className="flex-1 min-w-0 space-y-8">
           <CartList />
           <CheckoutSections />
@@ -18,6 +18,7 @@ export default function CartPage() {
           <CartSummary />
         </aside>
       </div>
+
       <ProductsSection
         title="🔥 Рекламные предложения"
         link="/promo"
