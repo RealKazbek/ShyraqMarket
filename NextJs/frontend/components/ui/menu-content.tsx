@@ -39,7 +39,6 @@ function MenuContentComponent({
         onClick={(e) => e.stopPropagation()}
         className="bg-white w-72 h-full p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-right"
       >
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-emerald-700">Меню</h3>
           <button onClick={onClose} aria-label="Close menu">
@@ -47,7 +46,6 @@ function MenuContentComponent({
           </button>
         </div>
 
-        {/* Навигация */}
         <Button onClick={() => onRoute("/order")} className="justify-start">
           <Image src={basketIcon} alt="orders" width={16} height={16} />
           <span>Мои заказы</span>
@@ -72,7 +70,6 @@ function MenuContentComponent({
           </Button>
         )}
 
-        {/* Аккаунт / Вход */}
         <div className="mt-auto">
           {user ? (
             <Link href="/account" onClick={onClose}>

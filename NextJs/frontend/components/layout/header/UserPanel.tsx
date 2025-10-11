@@ -21,17 +21,15 @@ const LoginModal = dynamic(() => import("@/components/layout/auth/Auth"), {
   ssr: false,
 });
 
-// 🔹 Тип пользователя
 export type User = {
   id: number;
   role: "ADMIN" | "USER" | "COURIER";
   avatar?: string | null;
 };
 
-// 🔹 Пропсы компонента (чтобы memo их знал)
 export type UserPanelProps = Record<string, never>;
 
-function UserPanelBase(_props: UserPanelProps) {
+function UserPanelBase() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -61,12 +59,14 @@ function UserPanelBase(_props: UserPanelProps) {
 
   const handleProtectedRoute = (path: string) => {
     if (user && localStorage.getItem("access")) router.push(path);
-    else setIsAuthOpen(true);
+    else {
+      setIsAuthOpen(true);
+      setIsMenuOpen(false);
+    }
   };
 
   return (
     <>
-      {/* 🔹 Desktop */}
       <div className="hidden xl:flex items-center gap-2 sm:gap-3">
         {user?.role === "ADMIN" && (
           <Button
@@ -113,7 +113,6 @@ function UserPanelBase(_props: UserPanelProps) {
         )}
       </div>
 
-      {/* 🔹 Mobile */}
       <div className="flex xl:hidden">
         <button
           onClick={() => setIsMenuOpen(true)}
@@ -146,7 +145,6 @@ function UserPanelBase(_props: UserPanelProps) {
   );
 }
 
-// ✅ Оборачиваем в memo и типизируем prev/next
 export const UserPanel = memo<UserPanelProps>(UserPanelBase, () => true);
 
 export default UserPanel;
