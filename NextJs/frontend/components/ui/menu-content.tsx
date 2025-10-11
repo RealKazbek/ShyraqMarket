@@ -1,15 +1,13 @@
-"use client";
-
+import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-import cartIcon from "@/public/icons/system/cart.svg";
-import basketIcon from "@/public/icons/system/basket.svg";
 import accountIcon from "@/public/icons/roles/account.svg";
 import adminIcon from "@/public/icons/roles/adminSite.svg";
+import basketIcon from "@/public/icons/system/basket.svg";
+import cartIcon from "@/public/icons/system/cart.svg";
 import deliveryIcon from "@/public/icons/roles/delivery.svg";
-import crossIcon from "@/public/icons/system/close.svg";
+import closeIcon from "@/public/icons/system/close.svg";
 
 type MenuContentProps = {
   user: {
@@ -20,11 +18,11 @@ type MenuContentProps = {
   onClose: () => void;
   onOpenAuth: () => void;
   onRoute: (path: string) => void;
-  onAdmin?: () => void;
-  onCourier?: () => void;
+  onAdmin: () => void;
+  onCourier: () => void;
 };
 
-export function MenuContent({
+function MenuContentComponent({
   user,
   onClose,
   onOpenAuth,
@@ -34,25 +32,22 @@ export function MenuContent({
 }: MenuContentProps) {
   return (
     <div
-      className="fixed inset-0 z-[9999] flex xl:hidden bg-black/50 backdrop-blur-sm"
+      className="fixed flex lg:hidden inset-0 z-50 bg-black/50 justify-end"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="absolute right-0 top-0 h-full w-72 bg-white p-6 flex flex-col gap-4 shadow-2xl
-                   animate-in fade-in slide-in-from-right rounded-l-xl border-l border-gray-200"
+        className="bg-white w-72 h-full p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-right"
       >
+        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-emerald-700">Меню</h3>
-          <button
-            onClick={onClose}
-            aria-label="Close menu"
-            className="p-2 hover:bg-gray-100 rounded-md transition"
-          >
-            <Image src={crossIcon} alt="close" width={20} height={20} />
+          <button onClick={onClose} aria-label="Close menu">
+            <Image src={closeIcon} alt="close" width={20} height={20} />
           </button>
         </div>
 
+        {/* Навигация */}
         <Button onClick={() => onRoute("/order")} className="justify-start">
           <Image src={basketIcon} alt="orders" width={16} height={16} />
           <span>Мои заказы</span>
@@ -77,10 +72,11 @@ export function MenuContent({
           </Button>
         )}
 
-        <div className="mt-auto border-t pt-4">
+        {/* Аккаунт / Вход */}
+        <div className="mt-auto">
           {user ? (
             <Link href="/account" onClick={onClose}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 border-t pt-4">
                 <Image
                   src={user.avatar || accountIcon}
                   alt="avatar"
@@ -92,7 +88,13 @@ export function MenuContent({
               </div>
             </Link>
           ) : (
-            <Button className="w-full" onClick={onOpenAuth}>
+            <Button
+              className="w-full"
+              onClick={() => {
+                onOpenAuth();
+                onClose();
+              }}
+            >
               Войти
             </Button>
           )}
@@ -101,3 +103,12 @@ export function MenuContent({
     </div>
   );
 }
+
+export const MenuContent = memo(
+  MenuContentComponent,
+  (prev, next) =>
+    prev.user?.id === next.user?.id &&
+    prev.user?.role === next.user?.role &&
+    prev.onClose === next.onClose &&
+    prev.onOpenAuth === next.onOpenAuth
+);

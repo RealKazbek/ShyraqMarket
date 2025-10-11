@@ -55,13 +55,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-gray-50 text-gray-900`}
       >
-        {/* 🔹 Глобальный Header */}
         <HeaderServer />
 
-        {/* 🔹 Основной контент */}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-3">
+          {children}
+        </main>
 
-        {/* 🔹 Глобальный Footer */}
         <Footer />
       </body>
     </html>

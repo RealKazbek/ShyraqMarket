@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -21,13 +21,17 @@ const LoginModal = dynamic(() => import("@/components/layout/auth/Auth"), {
   ssr: false,
 });
 
-type User = {
+// 🔹 Тип пользователя
+export type User = {
   id: number;
   role: "ADMIN" | "USER" | "COURIER";
   avatar?: string | null;
 };
 
-export default function UserPanel() {
+// 🔹 Пропсы компонента (чтобы memo их знал)
+export type UserPanelProps = Record<string, never>;
+
+function UserPanelBase(_props: UserPanelProps) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -42,10 +46,13 @@ export default function UserPanel() {
 
   useEffect(() => {
     setUser(loadFromStorage<User | null>("user", null));
+
     const handleLogin = () => setUser(loadFromStorage("user", null));
     const handleLogout = () => setUser(null);
+
     window.addEventListener("userLoggedIn", handleLogin);
     window.addEventListener("userLoggedOut", handleLogout);
+
     return () => {
       window.removeEventListener("userLoggedIn", handleLogin);
       window.removeEventListener("userLoggedOut", handleLogout);
@@ -59,6 +66,7 @@ export default function UserPanel() {
 
   return (
     <>
+      {/* 🔹 Desktop */}
       <div className="hidden xl:flex items-center gap-2 sm:gap-3">
         {user?.role === "ADMIN" && (
           <Button
@@ -105,6 +113,7 @@ export default function UserPanel() {
         )}
       </div>
 
+      {/* 🔹 Mobile */}
       <div className="flex xl:hidden">
         <button
           onClick={() => setIsMenuOpen(true)}
@@ -136,3 +145,8 @@ export default function UserPanel() {
     </>
   );
 }
+
+// ✅ Оборачиваем в memo и типизируем prev/next
+export const UserPanel = memo<UserPanelProps>(UserPanelBase, () => true);
+
+export default UserPanel;
