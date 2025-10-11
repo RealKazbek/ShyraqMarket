@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 text-gray-800 mt-12">
+    <footer className="bg-gray-100 text-gray-800">
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
         <div>
           <h4 className="font-semibold mb-3">Покупателям</h4>

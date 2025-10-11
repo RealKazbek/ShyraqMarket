@@ -44,3 +44,33 @@ export async function getMe(token: string) {
     },
   });
 }
+
+export async function logout() {
+  const refresh = localStorage.getItem("refresh");
+  const access = localStorage.getItem("access");
+
+  if (!refresh) return;
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/auth/logout/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access}`,
+      },
+      body: JSON.stringify({ refresh }),
+    });
+
+    if (!res.ok) {
+      console.warn("Ошибка при logout:", await res.text());
+    }
+
+    // Очистка хранилища
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("userLoggedOut"));
+  } catch (error) {
+    console.error("Ошибка при logout:", error);
+  }
+}
