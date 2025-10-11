@@ -17,7 +17,8 @@ type MenuContentProps = {
   } | null;
   onClose: () => void;
   onOpenAuth: () => void;
-  onRoute: (path: string) => void;
+  onOrderRoute: (path: string) => void;
+  onCartRoute: (path: string) => void;
   onAdmin: () => void;
   onCourier: () => void;
 };
@@ -26,7 +27,8 @@ function MenuContentComponent({
   user,
   onClose,
   onOpenAuth,
-  onRoute,
+  onOrderRoute,
+  onCartRoute,
   onAdmin,
   onCourier,
 }: MenuContentProps) {
@@ -46,16 +48,17 @@ function MenuContentComponent({
           </button>
         </div>
 
-        <Button onClick={() => onRoute("/order")} className="justify-start">
+        <Button
+          onClick={() => onOrderRoute("/order")}
+          className="justify-start"
+        >
           <Image src={basketIcon} alt="orders" width={16} height={16} />
           <span>Мои заказы</span>
         </Button>
 
-        <Button className="justify-start">
-          <Link className="flex gap-2" href={"/cart"}>
-            <Image src={cartIcon} alt="cart" width={16} height={16} />
-            <span>Корзина</span>
-          </Link>
+        <Button onClick={() => onCartRoute("/cart")} className="justify-start">
+          <Image src={cartIcon} alt="cart" width={16} height={16} />
+          <span>Корзина</span>
         </Button>
 
         {user?.role === "ADMIN" && (

@@ -66,6 +66,19 @@ function UserPanelBase() {
     }
   };
 
+  const handleProtectedOrder = (path: string) => {
+    if (user && localStorage.getItem("access")) router.push(path);
+    else {
+      setIsAuthOpen(true);
+      setIsMenuOpen(false);
+    }
+  };
+
+  const handleCartRedirect = (path: string) => {
+    router.push(path);
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <div className="hidden xl:flex items-center gap-2 sm:gap-3">
@@ -91,12 +104,12 @@ function UserPanelBase() {
           </Button>
         )}
 
-        <Button onClick={() => handleProtectedRoute("/order")} size={"lg"}>
+        <Button onClick={() => handleProtectedOrder("/order")} size={"lg"}>
           <Image src={basketIcon} alt="orders" width={24} height={24} />
           Мой заказы
         </Button>
 
-        <Button onClick={() => router.push("/cart")} size={"lg"}>
+        <Button onClick={() => handleCartRedirect("/cart")} size={"lg"}>
           <Image src={cartIcon} alt="cart" width={24} height={24} />
           Корзина
         </Button>
@@ -139,7 +152,8 @@ function UserPanelBase() {
               setIsAuthOpen(true);
               setIsMenuOpen(false);
             }}
-            onRoute={handleProtectedRoute}
+            onOrderRoute={handleProtectedOrder}
+            onCartRoute={handleCartRedirect}
             onAdmin={() => router.push("/admin")}
             onCourier={() => router.push("/courier")}
           />,
