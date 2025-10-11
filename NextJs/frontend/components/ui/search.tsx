@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function SearchBar() {
+export default function Search() {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
   const toSlug = (str: string) =>
-    str.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-zа-я0-9-]/gi, "");
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-zа-я0-9-]/gi, "");
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -18,11 +22,11 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="hidden md:flex items-center border rounded-lg overflow-hidden">
+    <div className="flex md:hidden items-center justify-between border rounded-lg overflow-hidden w-full">
       <input
         type="text"
         placeholder="Поиск..."
-        className="px-3 py-2 outline-none w-48 sm:w-64 text-sm"
+        className="w-full px-3 py-2 outline-none text-sm"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}

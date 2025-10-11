@@ -4,6 +4,7 @@ import "./globals.css";
 
 import HeaderServer from "@/components/layout/header/HeaderServer";
 import Footer from "@/components/layout/footer/Footer";
+import Search from "@/components/ui/search";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,6 +59,7 @@ export default function RootLayout({
         <HeaderServer />
 
         <main className="flex-1 w-full max-w-8xl mx-auto px-3 md:px-6 sm:px-9 lg:px-12 py-3">
+          <Search />
           {children}
         </main>
 
