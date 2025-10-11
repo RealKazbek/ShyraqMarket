@@ -1,11 +1,19 @@
-import { apiRequest } from "./index";
+import { apiRequest, API_URL } from "./index";
+import {
+  setUser,
+  setAccessToken,
+  setRefreshToken,
+  getAccessToken,
+  getRefreshToken,
+  clearAuthStorage,
+} from "@/lib/storage";
 
 export type User = {
   id: number;
   username: string | null;
   phone: string;
   address?: string | null;
-  role: string;
+  role: "ADMIN" | "USER" | "COURIER";
   avatar?: string | null;
 };
 
@@ -16,61 +24,62 @@ export type AuthResponse = {
 };
 
 export async function login(phone: string, code: string) {
-  return apiRequest<AuthResponse>("/auth/login/", {
+  const data = await apiRequest<AuthResponse>("/auth/login/", {
     method: "POST",
     body: JSON.stringify({ phone, code }),
+    enableRefresh: false,
   });
+
+  setUser(data.user);
+  setAccessToken(data.access);
+  setRefreshToken(data.refresh);
+  window.dispatchEvent(new Event("userLoggedIn"));
+  return data;
 }
 
 export async function register(username: string, phone: string, code: string) {
-  return apiRequest<AuthResponse>("/auth/signup/", {
+  const data = await apiRequest<AuthResponse>("/auth/signup/", {
     method: "POST",
     body: JSON.stringify({ username, phone, code }),
+    enableRefresh: false,
   });
+
+  setUser(data.user);
+  setAccessToken(data.access);
+  setRefreshToken(data.refresh);
+  window.dispatchEvent(new Event("userLoggedIn"));
+  return data;
 }
 
 export async function sendCode(phone: string) {
   return apiRequest<{ message: string }>("/auth/send-code/", {
     method: "POST",
     body: JSON.stringify({ phone }),
+    enableRefresh: false,
   });
 }
 
-export async function getMe(token: string) {
-  return apiRequest<User>("/auth/me/", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getMe() {
+  return apiRequest<User>("/auth/me/", { method: "GET" });
 }
 
 export async function logout() {
-  const refresh = localStorage.getItem("refresh");
-  const access = localStorage.getItem("access");
-
-  if (!refresh) return;
+  const access = getAccessToken();
+  const refresh = getRefreshToken();
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/auth/logout/", {
+    await fetch(`${API_URL}/auth/logout/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${access}`,
+        ...(access ? { Authorization: `Bearer ${access}` } : {}),
       },
       body: JSON.stringify({ refresh }),
     });
-
-    if (!res.ok) {
-      console.warn("Ошибка при logout:", await res.text());
-    }
-
-    // Очистка хранилища
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("user");
+  } catch (e) {
+    console.warn("Logout request failed:", e);
+  } finally {
+    clearAuthStorage();
     window.dispatchEvent(new Event("userLoggedOut"));
-  } catch (error) {
-    console.error("Ошибка при logout:", error);
   }
 }

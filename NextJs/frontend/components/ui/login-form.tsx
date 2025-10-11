@@ -14,7 +14,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { login, sendCode, register } from "@/api/auth";
 import Image from "next/image";
-import cross from "@/public/cross.svg";
+import cross from "@/public/icons/ui/cross.svg";
 
 type loginProps = React.ComponentProps<"div"> & {
   onClose: () => void;
