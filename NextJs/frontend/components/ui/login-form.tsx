@@ -3,29 +3,18 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { login, sendCode, register } from "@/api/auth";
-import Image from "next/image";
-import cross from "@/public/icons/ui/cross.svg";
 
-type loginProps = React.ComponentProps<"div"> & {
+type LoginFormProps = {
   onClose: () => void;
-};
+} & React.ComponentProps<"div">;
 
-export function LoginForm({ className, onClose, ...props }: loginProps) {
+export function LoginForm({ className, onClose, ...props }: LoginFormProps) {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [username, setUsername] = useState("");
   const [isRegister, setIsRegister] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -34,11 +23,10 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
     try {
       setError(null);
       setMessage(null);
-      const res = await sendCode(phone);
-      setMessage(res.message || "Code sent (check WhatsApp)");
-    } catch (err) {
-      console.log(err);
-      setError("Failed to send code");
+      const res = await sendCode(phone.trim());
+      setMessage(res.message || "Код отправлен (проверь WhatsApp)");
+    } catch {
+      setError("Ошибка отправки кода");
     }
   }
 
@@ -46,125 +34,134 @@ export function LoginForm({ className, onClose, ...props }: loginProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
 
     try {
-      let res;
-      if (isRegister) {
-        res = await register(username, phone, code);
-      } else {
-        res = await login(phone, code);
-      }
+      const trimmedPhone = phone.trim();
+      const trimmedCode = code.trim();
+      const trimmedName = username.trim();
 
-      console.log(`${isRegister ? "Register" : "Login"} success:`, res);
+      const res = isRegister
+        ? await register(trimmedName, trimmedPhone, trimmedCode)
+        : await login(trimmedPhone, trimmedCode);
 
       localStorage.setItem("access", res.access);
       localStorage.setItem("refresh", res.refresh);
-
-      if (res.user) {
-        localStorage.setItem("user", JSON.stringify(res.user));
-      }
-
+      localStorage.setItem("user", JSON.stringify(res.user));
       window.dispatchEvent(new Event("userLoggedIn"));
 
-      onClose();
-    } catch (err) {
-      console.log(err);
-      setError("Invalid phone/code or registration error");
+      setMessage(isRegister ? "Регистрация успешна!" : "Вход выполнен!");
+      setTimeout(onClose, 800);
+    } catch {
+      setError("Неверный код или ошибка при регистрации");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className="flex justify-between">
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
+      <h2 className="text-xl font-semibold text-center text-gray-800">
+        {isRegister ? "Регистрация" : "Вход"}
+      </h2>
+      <p className="text-sm text-center text-gray-500">
+        {isRegister
+          ? "Создайте аккаунт с помощью телефона"
+          : "Введите номер телефона и код для входа"}
+      </p>
+
+      <form onSubmit={handleSubmit} className="mt-2 space-y-4">
+        {isRegister && (
           <div>
-            <CardTitle>
-              {isRegister ? "Sign up" : "Login"} to your account
-            </CardTitle>
-            <CardDescription>
-              {isRegister
-                ? "Create a new account using your phone and code"
-                : "Enter your phone and code to login"}
-            </CardDescription>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Имя
+            </label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="Ваше имя"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           </div>
-          <Image
-            className="hover:scale-90 hover:rotate-180 transition-transform duration-300"
-            src={cross}
-            alt="X"
-            onClick={onClose}
+        )}
+
+        <div>
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Номер телефона
+          </label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="+77070000000"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
           />
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <FieldGroup>
-              {isRegister && (
-                <Field>
-                  <FieldLabel htmlFor="username">Name</FieldLabel>
-                  <Input
-                    id="username"
-                    type="text"
-                    placeholder="Your name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required={isRegister}
-                  />
-                </Field>
-              )}
-              <Field>
-                <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+77070000000"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="code">Code</FieldLabel>
-                <div className="flex gap-2">
-                  <Input
-                    id="code"
-                    type="text"
-                    placeholder="1111"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    required
-                  />
-                  <Button type="button" onClick={handleSendCode}>
-                    Get code
-                  </Button>
-                </div>
-              </Field>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              {message && <p className="text-sm text-green-600">{message}</p>}
-              <Field className="flex flex-col gap-2">
-                <Button type="submit" disabled={loading}>
-                  {loading
-                    ? isRegister
-                      ? "Registering..."
-                      : "Logging in..."
-                    : isRegister
-                    ? "Sign up"
-                    : "Login"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsRegister(!isRegister)}
-                >
-                  {isRegister
-                    ? "Already have an account? Login"
-                    : "Don’t have an account? Sign up"}
-                </Button>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+        </div>
+
+        <div>
+          <label
+            htmlFor="code"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Код подтверждения
+          </label>
+          <div className="flex gap-2">
+            <Input
+              id="code"
+              type="text"
+              placeholder="1111"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              required
+            />
+            <Button
+              type="button"
+              onClick={handleSendCode}
+              disabled={!phone || loading}
+            >
+              Получить
+            </Button>
+          </div>
+        </div>
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
+        {message && <p className="text-sm text-emerald-600">{message}</p>}
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+        >
+          {loading
+            ? isRegister
+              ? "Создание..."
+              : "Вход..."
+            : isRegister
+            ? "Создать аккаунт"
+            : "Войти"}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          disabled={loading}
+          onClick={() => setIsRegister(!isRegister)}
+          className="w-full"
+        >
+          {isRegister
+            ? "Уже есть аккаунт? Войти"
+            : "Нет аккаунта? Зарегистрируйтесь"}
+        </Button>
+      </form>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import searchIcon from "@/public/icons/ui/search.svg";
 
 export default function SearchBar() {
   return (
-    <div className="hidden sm:flex items-center border rounded-lg overflow-hidden">
+    <div className="hidden md:flex items-center border rounded-lg overflow-hidden">
       <input
         type="text"
         placeholder="Поиск..."
