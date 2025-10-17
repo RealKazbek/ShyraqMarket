@@ -9,7 +9,7 @@ import {
 
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
-  "http://10.248.165.222:8000";
+  "http://127.0.0.1:8000/api";
 
 const REFRESH_PATH = process.env.NEXT_PUBLIC_REFRESH_PATH || "/auth/refresh/";
 

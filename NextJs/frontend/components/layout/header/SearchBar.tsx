@@ -10,7 +10,11 @@ export default function SearchBar() {
   const router = useRouter();
 
   const toSlug = (str: string) =>
-    str.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-zа-я0-9-]/gi, "");
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-zа-я0-9-]/gi, "");
 
   const handleSearch = () => {
     if (!query.trim()) return;

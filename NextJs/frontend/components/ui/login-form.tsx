@@ -24,7 +24,7 @@ export function LoginForm({ className, onClose, ...props }: LoginFormProps) {
       setError(null);
       setMessage(null);
       const res = await sendCode(phone.trim());
-      setMessage(res.message || "Код отправлен (проверь WhatsApp)");
+      setMessage(res.message || "Код отправлен (проверь What)");
     } catch {
       setError("Ошибка отправки кода");
     }

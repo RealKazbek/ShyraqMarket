@@ -6,7 +6,7 @@ export type StoredUser = {
   username?: string | null;
   phone?: string;
   address?: string | null;
-  role: "ADMIN" | "USER" | "COURIER";
+  role: "ADMIN" | "USER" | "COURIER" | "BUYER";
   avatar?: string | null;
 };
 
