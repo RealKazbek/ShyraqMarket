@@ -16,9 +16,9 @@ interface Product {
 interface ProductsSectionProps {
   title?: string;
   link?: string;
-  limit?: number; // сколько товаров загружать за раз
-  batchSize?: number; // максимум товаров (для длинной ленты)
-  showLoadMore?: boolean; // включает автоподгрузку
+  limit?: number;
+  batchSize?: number;
+  showLoadMore?: boolean;
 }
 
 export default function ProductsSection({
@@ -34,11 +34,11 @@ export default function ProductsSection({
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  // ---------- Генерация моковых товаров ----------
+  // Generate demo products
   const generateDemoProducts = (count: number, startId: number) =>
     Array.from({ length: count }).map((_, i) => ({
       id: startId + i,
-      title: `Глюкометр ${startId + i} — модель ${2025 - i}`,
+      title: `Glucometer ${startId + i} — model ${2025 - i}`,
       price: 12500 + (startId + i) * 150,
       discount: (startId + i) % 2 === 0 ? 15 : undefined,
       colors: {
@@ -47,20 +47,18 @@ export default function ProductsSection({
       },
     }));
 
-  // ---------- Подгрузка ----------
+  // Load products
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;
     setLoading(true);
 
     setTimeout(() => {
       const startId = products.length + 1;
-      // 👇 если showLoadMore = false — грузим только один раз (limit товаров)
       const remaining = showLoadMore
         ? batchSize - loadedCount
         : limit - products.length;
       const count = Math.min(limit, remaining);
 
-      // Если уже всё подгрузили — выходим
       if (count <= 0) {
         setHasMore(false);
         setLoading(false);
@@ -72,7 +70,6 @@ export default function ProductsSection({
       setLoadedCount((prev) => prev + count);
       setLoading(false);
 
-      // если дошли до лимита
       if (!showLoadMore || loadedCount + count >= batchSize) {
         setHasMore(false);
       }
@@ -87,12 +84,12 @@ export default function ProductsSection({
     products.length,
   ]);
 
-  // ---------- Первая загрузка ----------
+  // Initial load
   useEffect(() => {
     loadMore();
   }, [loadMore]);
 
-  // ---------- Автоматическая подгрузка при скролле ----------
+  // Infinite scroll
   useEffect(() => {
     if (!showLoadMore || !hasMore) return;
 
@@ -104,7 +101,7 @@ export default function ProductsSection({
     return () => observer.disconnect();
   }, [showLoadMore, hasMore, loading, loadMore]);
 
-  // ---------- Ручная кнопка ----------
+  // Manual reload button
   const handleLoadMoreClick = () => {
     setHasMore(true);
     setLoadedCount(0);
@@ -113,20 +110,14 @@ export default function ProductsSection({
   return (
     <section className="my-12">
       {title && <ProductSectionHeader title={title} link={link} />}
-
       <ProductGrid products={products} />
-
-      {/* триггер для автоподгрузки */}
       {showLoadMore && hasMore && <div ref={observerRef} className="h-8" />}
-
-      {/* кнопка после лимита */}
       {!hasMore && showLoadMore && (
         <div className="flex justify-center mt-8">
-          <Button onClick={handleLoadMoreClick}>Показать ещё товары</Button>
+          <Button onClick={handleLoadMoreClick}>Show more products</Button>
         </div>
       )}
-
-      {loading && <p className="text-center text-gray-500 mt-6">Загрузка...</p>}
+      {loading && <p className="text-center text-gray-500 mt-6">Loading...</p>}
     </section>
   );
 }

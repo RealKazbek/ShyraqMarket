@@ -1,19 +1,15 @@
 // src/lib/api/auth.ts
-
 import { apiRequest, API_URL } from "./index";
 import {
-  setUser,
   setAccessToken,
   setRefreshToken,
   getAccessToken,
   getRefreshToken,
   clearAuthStorage,
 } from "@/lib/storage";
-import type { FullUserResponse, AuthResponse, UserRoleCheck } from "@/types";
+import type { FullUser, AuthResponse, UserRoleCheck } from "@/types";
 
-// ------------------------------------------------------
-// 📞 Отправка кода
-// ------------------------------------------------------
+// Send verification code
 export async function sendCode(phone: string) {
   return apiRequest<{ message: string }>("/auth/send-code/", {
     method: "POST",
@@ -22,27 +18,21 @@ export async function sendCode(phone: string) {
   });
 }
 
-// ------------------------------------------------------
-// 🧾 Регистрация
-// ------------------------------------------------------
-export async function register(username: string, phone: string, code: string) {
+// Register new user
+export async function register(first_name: string, phone: string, code: string) {
   const data = await apiRequest<AuthResponse>("/auth/signup/", {
     method: "POST",
-    body: JSON.stringify({ username, phone, code }),
+    body: JSON.stringify({ first_name, phone, code }),
     enableRefresh: false,
   });
 
-  setUser(data.user);
   setAccessToken(data.access);
   setRefreshToken(data.refresh);
   window.dispatchEvent(new Event("userLoggedIn"));
-
   return data;
 }
 
-// ------------------------------------------------------
-// 🔐 Вход
-// ------------------------------------------------------
+// Login user
 export async function login(phone: string, code: string) {
   const data = await apiRequest<AuthResponse>("/auth/login/", {
     method: "POST",
@@ -50,34 +40,27 @@ export async function login(phone: string, code: string) {
     enableRefresh: false,
   });
 
-  setUser(data.user);
   setAccessToken(data.access);
   setRefreshToken(data.refresh);
   window.dispatchEvent(new Event("userLoggedIn"));
-
   return data;
 }
 
-// ------------------------------------------------------
-// 👤 Получить полную информацию о пользователе
-// ------------------------------------------------------
+// Get full user info
 export async function getFullUser() {
-  const data = await apiRequest<FullUserResponse>("/auth/full/", {
+  const data = await apiRequest<FullUser>("/auth/full/", {
     method: "GET",
   });
-  setUser(data.user);
+
   return data;
 }
 
-// ------------------------------------------------------
-// 🚪 Выход из системы (полная очистка и редирект)
-// ------------------------------------------------------
+// Logout user and clear storage
 export async function logout() {
   const access = getAccessToken();
   const refresh = getRefreshToken();
 
   try {
-    // отправляем logout-запрос на backend
     await fetch(`${API_URL}/auth/logout/`, {
       method: "POST",
       headers: {
@@ -89,27 +72,19 @@ export async function logout() {
   } catch (e) {
     console.warn("Logout request failed:", e);
   } finally {
-    // полная очистка localStorage
     try {
       localStorage.clear();
     } catch (err) {
       console.warn("Failed to clear localStorage:", err);
     }
 
-    // очистка авторизационных данных
     clearAuthStorage();
-
-    // уведомление других вкладок/компонентов
     window.dispatchEvent(new Event("userLoggedOut"));
-
-    // перенаправление на главный экран
     window.location.href = "/";
   }
 }
 
-// ------------------------------------------------------
-// 🧩 Проверка роли
-// ------------------------------------------------------
+// Check user role
 export async function getUserRole() {
   return apiRequest<UserRoleCheck>("/auth/role-check/", { method: "GET" });
 }

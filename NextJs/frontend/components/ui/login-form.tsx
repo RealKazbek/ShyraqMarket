@@ -13,7 +13,7 @@ type LoginFormProps = {
 export function LoginForm({ className, onClose, ...props }: LoginFormProps) {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export function LoginForm({ className, onClose, ...props }: LoginFormProps) {
     try {
       const trimmedPhone = phone.trim();
       const trimmedCode = code.trim();
-      const trimmedName = username.trim();
+      const trimmedName = firstName.trim();
 
       const res = isRegister
         ? await register(trimmedName, trimmedPhone, trimmedCode)
@@ -83,8 +83,8 @@ export function LoginForm({ className, onClose, ...props }: LoginFormProps) {
               id="username"
               type="text"
               placeholder="Ваше имя"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
             />
           </div>

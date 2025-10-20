@@ -1,3 +1,4 @@
+// Custom API error with status and optional payload
 export class ApiError extends Error {
   status: number;
   payload?: unknown;

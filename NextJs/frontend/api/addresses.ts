@@ -1,18 +1,16 @@
-import { apiRequest } from "./index"; // абсолютный импорт
-import type { Address } from "@/types"; // типы берём из глобальных
+import { apiRequest } from "./index";
+import type { Address } from "@/types";
 
-// ------------------------------------------------------
-// 📬 Запросы к API (адреса пользователя)
-// ------------------------------------------------------
+// ==============================
+// User addresses
+// ==============================
 
-// Получить список адресов пользователя
+// Get all user addresses
 export async function getAddresses(): Promise<Address[]> {
-  return apiRequest<Address[]>("/addresses/", {
-    method: "GET",
-  });
+  return apiRequest<Address[]>("/addresses/", { method: "GET" });
 }
 
-// Добавить новый адрес
+// Create new address
 export type CreateAddressBody = Omit<Address, "id">;
 
 export async function createAddress(body: CreateAddressBody): Promise<Address> {
@@ -22,7 +20,7 @@ export async function createAddress(body: CreateAddressBody): Promise<Address> {
   });
 }
 
-// Обновить адрес по ID
+// Update address by ID
 export async function updateAddress(
   id: number,
   body: Partial<CreateAddressBody>
@@ -33,9 +31,7 @@ export async function updateAddress(
   });
 }
 
-// Удалить адрес по ID
+// Delete address by ID
 export async function deleteAddress(id: number): Promise<void> {
-  await apiRequest<void>(`/addresses/${id}/`, {
-    method: "DELETE",
-  });
+  await apiRequest<void>(`/addresses/${id}/`, { method: "DELETE" });
 }

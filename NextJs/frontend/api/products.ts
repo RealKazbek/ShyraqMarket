@@ -1,11 +1,10 @@
 import { Brand, Category, Product } from "@/types";
 import { apiRequest } from "./index";
 
-// ======================================================
-// 🛍 ТОВАРЫ
-// ======================================================
+// ==============================
+// Products
+// ==============================
 
-// Получить список товаров с фильтрацией
 export type ProductQuery = {
   category?: number;
   brand?: number;
@@ -15,6 +14,7 @@ export type ProductQuery = {
   ordering?: string;
 };
 
+// Get product list with filters
 export async function getProducts(
   params: ProductQuery = {}
 ): Promise<Product[]> {
@@ -29,12 +29,12 @@ export async function getProducts(
   return apiRequest<Product[]>(url, { method: "GET" });
 }
 
-// Получить один товар по ID
+// Get product by ID
 export async function getProduct(id: number): Promise<Product> {
   return apiRequest<Product>(`/products/${id}/`, { method: "GET" });
 }
 
-// Создать товар (только админ)
+// Create product (admin only)
 export async function createProduct(data: Partial<Product>): Promise<Product> {
   return apiRequest<Product>("/products/", {
     method: "POST",
@@ -42,7 +42,7 @@ export async function createProduct(data: Partial<Product>): Promise<Product> {
   });
 }
 
-// Обновить товар
+// Update product
 export async function updateProduct(
   id: number,
   data: Partial<Product>
@@ -53,21 +53,21 @@ export async function updateProduct(
   });
 }
 
-// Удалить товар
+// Delete product
 export async function deleteProduct(id: number): Promise<void> {
   await apiRequest<void>(`/products/${id}/`, { method: "DELETE" });
 }
 
-// ======================================================
-// 🏷 КАТЕГОРИИ
-// ======================================================
+// ==============================
+// Categories
+// ==============================
 export async function getCategories(): Promise<Category[]> {
   return apiRequest<Category[]>("/categories/", { method: "GET" });
 }
 
-// ======================================================
-// 🏭 БРЕНДЫ
-// ======================================================
+// ==============================
+// Brands
+// ==============================
 export async function getBrands(): Promise<Brand[]> {
   return apiRequest<Brand[]>("/brands/", { method: "GET" });
 }

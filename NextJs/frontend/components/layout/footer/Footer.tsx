@@ -17,50 +17,50 @@ export default function Footer() {
         className="max-w-6xl mx-auto px-3 md:px-6 sm:px-9 lg:px-12 py-10 grid text-center sm:text-left grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
       >
         <div>
-          <h4 className="font-semibold mb-3 text-emerald-700">Покупателям</h4>
+          <h4 className="font-semibold mb-3 text-emerald-700">For Customers</h4>
           <ul className="space-y-2">
             <li>
               <Link href="#" className="hover:text-emerald-600 transition">
-                Поддержка
+                Support
               </Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-semibold mb-3 text-emerald-700">Партнёрам</h4>
+          <h4 className="font-semibold mb-3 text-emerald-700">For Partners</h4>
           <ul className="space-y-2">
             <li>
               <Link href="#" className="hover:text-emerald-600 transition">
-                Инвесторам
+                Investors
               </Link>
             </li>
             <li>
               <Link href="#" className="hover:text-emerald-600 transition">
-                Аффилиатная программа
+                Affiliate Program
               </Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-semibold mb-3 text-emerald-700">О компании</h4>
+          <h4 className="font-semibold mb-3 text-emerald-700">About Us</h4>
           <ul className="space-y-2">
             <li>
               <Link href="#" className="hover:text-emerald-600 transition">
-                Основатель
+                Founder
               </Link>
             </li>
             <li>
               <Link href="#" className="hover:text-emerald-600 transition">
-                История
+                History
               </Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-semibold mb-3 text-emerald-700">Мы в соцсетях</h4>
+          <h4 className="font-semibold mb-3 text-emerald-700">Follow Us</h4>
           <ul className="flex flex-col items-center sm:items-start space-y-3">
             {[
               {
@@ -94,14 +94,14 @@ export default function Footer() {
       </nav>
 
       <div className="border-t py-4 text-center text-sm text-gray-500">
-        <p>© SHYRAQ MARKET 2025</p>
+        <p>© Shyraq Market 2025</p>
         <p className="flex flex-col sm:flex-row items-center justify-center gap-1 mt-1">
           <Link href="#" className="text-emerald-600 hover:underline">
-            Политика конфиденциальности
+            Privacy Policy
           </Link>
           <span className="hidden sm:block">·</span>
           <Link href="#" className="text-emerald-600 hover:underline">
-            Пользовательское соглашение
+            Terms of Use
           </Link>
         </p>
       </div>

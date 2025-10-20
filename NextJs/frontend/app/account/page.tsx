@@ -7,10 +7,10 @@ import AddressSection from "@/app/account/_components/layout/addressSection";
 import PreferencesSection from "@/app/account/_components/layout/preferencesSection";
 import StatsSection from "@/app/account/_components/layout/statsSection";
 import useAccountForm from "@/app/account/_components/useAccountForm";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function AccountPage() {
-  const { form, update, editing, setEditing, onSave, loading } =
-    useAccountForm();
+  const { form, loading } = useAccountForm();
 
   if (loading || !form) {
     return (
@@ -24,54 +24,66 @@ export default function AccountPage() {
 
   return (
     <AccountLayout>
-      <AccountHeader
-        form={form}
-        editing={editing}
-        setEditing={setEditing}
-        onSave={onSave}
-      />
-      <AccountForm
-        form={{
-          username: form.username,
-          first_name: form.first_name,
-          last_name: form.last_name,
-          phone: form.phone,
-          gender: form.gender,
-          language: form.language,
-          currency: form.currency,
-        }}
-        update={update}
-        editing={editing}
-      />
-      <AddressSection
-        form={
-          form.addresses && form.addresses.length > 0
-            ? {
-                country: form.addresses[0].country,
-                city: form.addresses[0].city,
-                street: form.addresses[0].street,
-                house: form.addresses[0].house,
-                postal_code: form.addresses[0].postal_code,
-                phone: form.addresses[0].phone,
-                comment: form.addresses[0].comment,
-                default_address: form.addresses[0].default,
-              }
-            : {
-                country: "",
-                city: "",
-                street: "",
-                house: "",
-                postal_code: "",
-                phone: "",
-                comment: "",
-                default_address: false,
-              }
-        }
-        update={update}
-        editing={editing}
-      />{" "}
-      <PreferencesSection form={form} update={update} editing={editing} />
-      <StatsSection form={form} />
+      <Card>
+        <CardContent>
+          <AccountHeader
+            form={{
+              first_name: form.user.first_name,
+              last_name: form.user.last_name,
+              avatar: form.user.avatar,
+              role: form.user.role,
+              is_active: form.user.is_active,
+            }}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent>
+          <AccountForm
+            form={{
+              first_name: form.user.first_name,
+              last_name: form.user.last_name,
+              phone: form.user.phone,
+              email: form.user.email,
+              birth_date: form.user.birth_date,
+              gender: form.user.gender,
+              language: form.user.language,
+              currency: form.user.currency,
+            }}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent>
+          <AddressSection form={form.addresses} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          <PreferencesSection
+            form={{
+              notifications_enabled: form.user.notifications_enabled,
+              email_subscribed: form.user.email_subscribed,
+              whatsapp_verified: form.user.whatsapp_verified,
+            }}
+          />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          <StatsSection
+            form={{
+              order_count: form.user.order_count,
+              wishlist_count: form.user.wishlist_count,
+              total_spent: form.user.total_spent,
+              cashback: form.user.cashback,
+              currency: form.user.currency,
+            }}
+          />
+        </CardContent>
+      </Card>
     </AccountLayout>
   );
 }

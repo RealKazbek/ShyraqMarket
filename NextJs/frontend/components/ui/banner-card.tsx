@@ -1,7 +1,7 @@
 interface BannerProps {
   title: string;
   subtitle: string;
-  color: string; // пример: "from-emerald-500 to-teal-400"
+  color: string;
 }
 
 export default function BannerCard({ title, subtitle, color }: BannerProps) {
@@ -14,10 +14,10 @@ export default function BannerCard({ title, subtitle, color }: BannerProps) {
         rounded-2xl overflow-hidden shadow-md
       `}
     >
-      {/* затемнение для контраста текста */}
+      {/* Overlay for text contrast */}
       <div className="absolute inset-0 bg-black/25 sm:bg-black/20 md:bg-black/15" />
 
-      {/* текст */}
+      {/* Text */}
       <div
         className="
           relative z-10 text-center text-white 

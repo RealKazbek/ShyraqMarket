@@ -1,16 +1,9 @@
 "use client";
 import Stat from "@/app/account/_components/ui/stat";
-
-type StatsForm = {
-  order_count?: number;
-  wishlist_count?: number;
-  total_spent?: number;
-  cashback?: number;
-  currency?: string;
-};
+import { StatsForm } from "@/types";
 
 type StatsSectionProps = {
-  form: StatsForm | null;
+  form: StatsForm;
 };
 
 export default function StatsSection({ form }: StatsSectionProps) {

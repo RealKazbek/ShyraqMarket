@@ -5,17 +5,13 @@ export default function HomePage() {
   return (
     <>
       <PromoBanner />
-      <ProductsSection title="Специально для вас" link="/personal" limit={5} />
+      <ProductsSection title="Special for you" link="/personal" limit={5} />
+      <ProductsSection title="🔥 Promotional offers" link="/promo" limit={5} />
       <ProductsSection
-        title="🔥 Рекламные предложения"
-        link="/promo"
-        limit={5}
-      />
-      <ProductsSection
-        title="Вас могут заинтересовать"
+        title="You may also like"
         showLoadMore
-        limit={10} // по 10 товаров за загрузку
-        batchSize={20} // максимум 50 за цикл
+        limit={10}
+        batchSize={20}
       />
     </>
   );

@@ -17,16 +17,11 @@ import menuIcon from "@/public/icons/system/menu.svg";
 import adminIcon from "@/public/icons/roles/adminSite.svg";
 import deliveryIcon from "@/public/icons/roles/delivery.svg";
 import loginIcon from "@/public/icons/roles/account.svg";
+import { User } from "@/types";
 
 const LoginModal = dynamic(() => import("@/components/layout/auth/Auth"), {
   ssr: false,
 });
-
-export type User = {
-  id: number;
-  role: "ADMIN" | "USER" | "COURIER";
-  avatar?: string | null;
-};
 
 export type UserPanelProps = Record<string, never>;
 
@@ -82,45 +77,47 @@ function UserPanelBase() {
   return (
     <>
       <div className="hidden xl:flex items-center gap-2 sm:gap-3">
-        {user?.role === "ADMIN" && (
-          <Button
-            onClick={() => handleProtectedRoute("/admin")}
-            className="flex items-center gap-2"
-            size={"lg"}
-          >
-            <Image src={adminIcon} alt="admin" width={16} height={16} />
-            <span>Admin</span>
+        <div className="grid grid-cols-2 gap-2">
+          {user?.role === "ADMIN" && (
+            <Button
+              onClick={() => handleProtectedRoute("/admin")}
+              className="flex items-center gap-2"
+              size={"lg"}
+            >
+              <Image src={adminIcon} alt="admin" width={16} height={16} />
+              <span>Admin</span>
+            </Button>
+          )}
+
+          {["ADMIN", "COURIER"].includes(user?.role || "") && (
+            <Button
+              onClick={() => handleProtectedRoute("/courier")}
+              className="flex items-center gap-2"
+              size={"lg"}
+            >
+              <Image src={deliveryIcon} alt="courier" width={24} height={24} />
+              <span>Courier</span>
+            </Button>
+          )}
+
+          <Button onClick={() => handleProtectedOrder("/order")} size={"lg"}>
+            <Image src={basketIcon} alt="orders" width={24} height={24} />
+            Мой заказы
           </Button>
-        )}
 
-        {["ADMIN", "COURIER"].includes(user?.role || "") && (
-          <Button
-            onClick={() => handleProtectedRoute("/courier")}
-            className="flex items-center gap-2"
-            size={"lg"}
-          >
-            <Image src={deliveryIcon} alt="courier" width={24} height={24} />
-            <span>Courier</span>
+          <Button onClick={() => handleCartRedirect("/cart")} size={"lg"}>
+            <Image src={cartIcon} alt="cart" width={24} height={24} />
+            Корзина
           </Button>
-        )}
-
-        <Button onClick={() => handleProtectedOrder("/order")} size={"lg"}>
-          <Image src={basketIcon} alt="orders" width={24} height={24} />
-          Мой заказы
-        </Button>
-
-        <Button onClick={() => handleCartRedirect("/cart")} size={"lg"}>
-          <Image src={cartIcon} alt="cart" width={24} height={24} />
-          Корзина
-        </Button>
+        </div>
 
         {user ? (
           <Link href="/account">
             <Image
               src={user.avatar || accountIcon}
               alt="avatar"
-              width={34}
-              height={34}
+              width={48}
+              height={48}
               className="rounded-full border object-cover"
             />
           </Link>

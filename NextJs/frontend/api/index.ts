@@ -12,13 +12,13 @@ export const API_URL =
   "http://127.0.0.1:8000/api";
 
 const REFRESH_PATH = process.env.NEXT_PUBLIC_REFRESH_PATH || "/auth/refresh/";
-
 const DEFAULT_TIMEOUT = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS || 15000);
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
 const pendingRequests: Array<() => void> = [];
 
+// Add timeout to fetch
 function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => reject(new ApiError(0, "Request timeout")), ms);
@@ -32,6 +32,7 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   });
 }
 
+// Refresh access token
 async function doRefreshToken(): Promise<void> {
   if (isRefreshing && refreshPromise) return refreshPromise;
   isRefreshing = true;
@@ -82,6 +83,7 @@ type ApiOptions = RequestInit & {
   enableRefresh?: boolean;
 };
 
+// Main API request
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiOptions = {}
@@ -111,19 +113,15 @@ export async function apiRequest<T>(
     response = await withTimeout(exec(), timeoutMs);
   } catch (e: unknown) {
     if (e instanceof ApiError) throw e;
-    if (e instanceof Error) {
-      throw new ApiError(0, e.message || "Network error");
-    }
+    if (e instanceof Error) throw new ApiError(0, e.message || "Network error");
     throw new ApiError(0, "Unknown network error");
   }
 
+  // Handle 401 with refresh
   if (response.status === 401 && enableRefresh) {
     try {
-      if (isRefreshing && refreshPromise) {
-        await refreshPromise;
-      } else {
-        await doRefreshToken();
-      }
+      if (isRefreshing && refreshPromise) await refreshPromise;
+      else await doRefreshToken();
 
       const newAccess = getAccessToken();
       const retryHeaders: HeadersInit = {
@@ -143,6 +141,7 @@ export async function apiRequest<T>(
     }
   }
 
+  // Retry on server error
   if (
     (response.status === 429 || response.status >= 500) &&
     response.status < 600
@@ -151,6 +150,7 @@ export async function apiRequest<T>(
     response = await withTimeout(exec(), timeoutMs);
   }
 
+  // Handle non-OK
   if (!response.ok) {
     let payload: unknown = null;
     let message = `API error ${response.status}`;
@@ -158,12 +158,11 @@ export async function apiRequest<T>(
       const text = await response.text();
       payload = text;
       if (text) message += `: ${text}`;
-    } catch {
-      /* ignore */
-    }
+    } catch {}
     throw new ApiError(response.status, message, payload);
   }
 
+  // Parse JSON
   try {
     return (await response.json()) as T;
   } catch {

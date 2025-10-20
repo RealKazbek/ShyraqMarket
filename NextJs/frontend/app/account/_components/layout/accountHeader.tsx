@@ -3,34 +3,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { logout } from "@/api/auth";
-
-type AccountHeaderForm = {
-  first_name: string;
-  last_name: string;
-  email: string;
-};
+import { AccountHeaderForm } from "@/types";
 
 type AccountHeaderProps = {
   form: AccountHeaderForm;
-  editing: boolean;
-  setEditing: (state: boolean) => void;
-  onSave: () => void;
 };
 
-export default function AccountHeader({
-  form,
-  editing,
-  setEditing,
-  onSave,
-}: AccountHeaderProps) {
-  const firstInitial = form?.first_name?.[0]?.toUpperCase() ?? "?";
-  const lastInitial = form?.last_name?.[0]?.toUpperCase() ?? "?";
+export default function AccountHeader({ form }: AccountHeaderProps) {
+  const firstInitial = form.first_name?.[0]?.toUpperCase() ?? "?";
+  const lastInitial = form.last_name?.[0]?.toUpperCase() ?? "?";
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
-          <AvatarImage src="/placeholder.jpg" alt="User avatar" />
+          <AvatarImage src={form.avatar} alt="User avatar" />
           <AvatarFallback>
             {firstInitial}
             {lastInitial}
@@ -40,28 +27,26 @@ export default function AccountHeader({
           <h2 className="text-xl font-semibold">
             {form.first_name} {form.last_name}
           </h2>
-          <p className="text-sm text-muted-foreground">{form.email}</p>
           <div className="mt-2 flex gap-2 flex-wrap">
-            <Badge variant="default">Active</Badge>
-            <Badge variant="outline">Role: USER</Badge>
+            <Badge variant="default">
+              {form.is_active ? "Active" : "Blocked"}
+            </Badge>
+            {form.role !== "USER" && (
+              <Badge variant="outline">
+                Role:{" "}
+                {form.role.charAt(0).toUpperCase() +
+                  form.role.slice(1).toLowerCase()}
+              </Badge>
+            )}
           </div>
         </div>
       </div>
-      <div className="flex gap-2">
-        {!editing ? (
-          <>
-            <Button onClick={logout}>Logout</Button>
-            <Button onClick={() => setEditing(true)}>Edit</Button>
-          </>
-        ) : (
-          <>
-            <Button onClick={onSave}>Save</Button>
-            <Button variant="outline" onClick={() => setEditing(false)}>
-              Cancel
-            </Button>
-          </>
-        )}
-      </div>
+
+      <h3 className="text-3xl tracking-wide font-bold">Добро пожаловать</h3>
+
+      <Button variant="destructive" onClick={logout}>
+        Logout
+      </Button>
     </div>
   );
 }

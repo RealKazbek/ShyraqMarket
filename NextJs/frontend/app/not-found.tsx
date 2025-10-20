@@ -11,16 +11,16 @@ export default function NotFound() {
       </span>
 
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 mb-2">
-        Страница не найдена
+        Page not found
       </h1>
 
       <p className="text-gray-600 max-w-md text-sm sm:text-base mb-6">
-        Возможно, она была удалена или вы ошиблись при вводе адреса.
+        The page may have been removed or the address was entered incorrectly.
       </p>
 
       <Link href="/" className="w-full sm:w-auto">
         <Button className="w-full sm:w-auto px-6 py-2 text-base sm:text-lg">
-          Вернуться на главную
+          Back to home
         </Button>
       </Link>
     </main>

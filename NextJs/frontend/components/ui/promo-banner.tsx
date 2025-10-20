@@ -7,20 +7,20 @@ import BannerCard from "./banner-card";
 const banners = [
   {
     id: 1,
-    title: "Качественные локальные бренды",
-    subtitle: "Поддержи производителей Казахстана",
+    title: "High-quality local brands",
+    subtitle: "Support producers from Kazakhstan",
     color: "from-emerald-600 to-lime-500",
   },
   {
     id: 2,
-    title: "Скидки до 80%",
-    subtitle: "Не пропусти горячие предложения недели",
+    title: "Up to 80% discounts",
+    subtitle: "Don’t miss this week’s hot deals",
     color: "from-pink-600 to-purple-600",
   },
   {
     id: 3,
-    title: "Новые коллекции",
-    subtitle: "Обновления каждую неделю",
+    title: "New collections",
+    subtitle: "Weekly updates",
     color: "from-blue-600 to-cyan-500",
   },
 ];
@@ -31,13 +31,14 @@ export default function PromoBanner() {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % banners.length);
-    }, 5000); // ⏱️ плавнее каждые 5 секунд
+    }, 5000); // Auto change every 5 seconds
     return () => clearInterval(timer);
   }, []);
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev - 1 + banners.length) % banners.length);
   };
+
   const handleNext = () => {
     setActiveIndex((prev) => (prev + 1) % banners.length);
   };
@@ -50,7 +51,7 @@ export default function PromoBanner() {
         overflow-hidden rounded-2xl shadow-md mt-3
       "
     >
-      {/* Слайды */}
+      {/* Slides */}
       {banners.map((banner, index) => (
         <div
           key={banner.id}
@@ -62,7 +63,7 @@ export default function PromoBanner() {
         </div>
       ))}
 
-      {/* Кнопки переключения */}
+      {/* Navigation buttons */}
       <button
         onClick={handlePrev}
         className="
@@ -91,7 +92,7 @@ export default function PromoBanner() {
         <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
       </button>
 
-      {/* Индикаторы */}
+      {/* Indicators */}
       <div
         className="
           absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 
